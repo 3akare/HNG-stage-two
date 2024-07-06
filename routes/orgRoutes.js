@@ -3,7 +3,7 @@ const router = Router();
 const orgController = require("../controllers/orgController");
 
 router.get("/", orgController.getOrganisations); //get
-router.get("/", orgController.createOrganisation); //post
+router.get("/create", orgController.createOrganisation); //post (remove create later)
 router.get("/:orgId", orgController.getOrganisation); //get
 router.get("/:orgId/users", orgController.addUserToOrganisation); //post
 
