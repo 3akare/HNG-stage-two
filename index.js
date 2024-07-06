@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const orgRoutes = require("./routes/orgRoutes");
 
 //config
 const app = express();
@@ -14,7 +15,8 @@ require("dotenv").config();
 const db = require("./models/index");
 
 //routes
-app.use("/auth", authRoutes)
+app.use("/auth", authRoutes);
+app.use("/api/organisations", orgRoutes);
 app.use("/test", authRoutes);
 
 app.use(cors());
