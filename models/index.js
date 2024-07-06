@@ -1,6 +1,7 @@
 const SequelizeObject = require("sequelize");
 const mysql = require("mysql2");
 const pg = require("pg");
+require("dotenv").config();
 
 const dbConfig = {
   database_name: process.env.DB_NAME || "hng-database",
