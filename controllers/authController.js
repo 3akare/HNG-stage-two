@@ -2,7 +2,7 @@ const { userModel, orgModel } = require("../models/index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { validateRegistration } = require("../utils/index")
+const { validateRegistration, validateLogin } = require("../utils/index")
 
 exports.register = async (req, res) => {
   try {
@@ -62,7 +62,6 @@ exports.register = async (req, res) => {
     });
 
   } catch (err) {
-    console.log(err);
     return res.status(400).json({
       status: "Bad Request",
       message: "Registration unsuccessful",
@@ -72,6 +71,46 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  //post
-  return res.status(200).send("login");
+  //validation of fields
+  try {
+    const { email, password } = req.body;
+    const errors = validateLogin(email, password);
+
+    if (errors.length > 0) {
+      return res.status(422).json({ errors });
+    }
+    console.log(email, password)
+
+    const user = await userModel.findOne({ where: { email } });
+    console.log(user)
+    if (user && bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '3h' });
+      return res.status(200).json({
+        status: "success",
+        message: "Login successful",
+        data: {
+          accessToken: token,
+          user: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+          }
+        }
+      });
+    }
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "Authentication failed",
+      statusCode: 400
+    })
+
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "Authentication failed",
+      statusCode: 400
+    })
+  }
 };

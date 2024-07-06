@@ -32,4 +32,24 @@ const validateRegistration = (firstName, lastName, email, password) => {
     return errors;
 };
 
-module.exports = { validateRegistration };
+const validateLogin = (email, password) => {
+    const errors = [];
+
+    if (!email) {
+        errors.push({
+            field: 'email',
+            message: 'Email is required'
+        });
+    }
+
+    if (!password) {
+        errors.push({
+            field: 'password',
+            message: 'Password is required'
+        });
+    }
+
+    return errors;
+};
+
+module.exports = { validateRegistration, validateLogin };
