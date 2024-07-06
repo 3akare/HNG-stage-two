@@ -79,31 +79,46 @@ exports.login = async (req, res) => {
     if (errors.length > 0) {
       return res.status(422).json({ errors });
     }
-    console.log(email, password)
 
+    //find and validate user
     const user = await userModel.findOne({ where: { email } });
-    console.log(user)
-    if (user && bcrypt.compare(password, user.password)) {
-      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '3h' });
-      return res.status(200).json({
-        status: "success",
-        message: "Login successful",
-        data: {
-          accessToken: token,
-          user: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            phone: user.phone,
-          }
-        }
-      });
+
+    if (!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User not found",
+        statusCode: 404
+      })
     }
-    return res.status(400).json({
-      status: "Bad Request",
-      message: "Authentication failed",
-      statusCode: 400
-    })
+
+    //compare password
+    const confirmPassword = await bcrypt.compare(password, user.password);
+
+    if (!confirmPassword) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Authentication failed",
+        statusCode: 400
+      })
+    }
+
+    //generate jwt_token
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '3h' });
+
+    //response
+    return res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      data: {
+        accessToken: token,
+        user: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone,
+        }
+      }
+    });
 
   } catch (error) {
     console.log(error)
