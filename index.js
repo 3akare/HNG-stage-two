@@ -39,3 +39,5 @@ app.listen(PORT, async () => {
       console.log("Error Syncing Database", error);
     });
 });
+
+module.exports = app;

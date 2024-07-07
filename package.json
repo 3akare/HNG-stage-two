@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node app.js",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "jest": {
     "testEnvironment": "node"
