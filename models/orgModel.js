@@ -4,11 +4,10 @@ const { DataTypes } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   const orgModel = sequelize.define("organisation", {
     orgId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       primaryKey: true,
       unique: true,
       allowNull: false,
-      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,

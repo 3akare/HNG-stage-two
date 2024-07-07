@@ -24,9 +24,13 @@ exports.register = async (req, res) => {
       });
     }
 
+    //
+    const userId = `${firstName}-${Date.now()}`;
+
     //hashpassword and save user
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await userModel.create({
+      userId,
       firstName,
       lastName,
       email,
@@ -36,6 +40,7 @@ exports.register = async (req, res) => {
 
     //create organisation
     const org = await orgModel.create({
+      orgId: `${firstName}-org-${Date.now()}`,
       name: `${firstName}'s Organisation`,
       description: `This is ${firstName}'s organisation`,
     });
@@ -64,6 +69,7 @@ exports.register = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log(err);
     return res.status(400).json({
       status: "Bad Request",
       message: "Registration unsuccessful",
@@ -125,7 +131,6 @@ exports.login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       status: "Bad Request",
       message: "Authentication failed",

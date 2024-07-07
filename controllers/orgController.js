@@ -40,7 +40,9 @@ exports.createOrganisation = async (req, res) => {
       });
     }
 
+    const orgId = `organisation-${Date.now()}`
     const org = await orgModel.create({
+      orgId,
       name,
       description,
     });
