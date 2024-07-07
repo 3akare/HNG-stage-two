@@ -38,7 +38,7 @@ const sequelize = new SequelizeObject(
     port: dbConfig.database_port,
     dialect: dbConfig.database_dialect,
     dialectModule: dbConfig.database_dialect_module,
-    dialect_options: dbConfig.database_dialect_options,
+    dialectOptions: dbConfig.database_dialect_options,
     pool: dbConfig.database_pool,
     logging: false,
   }
