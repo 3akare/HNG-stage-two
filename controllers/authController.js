@@ -2,7 +2,7 @@ const { userModel, orgModel } = require("../models/index");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const { validateRegistration, validateLogin } = require("../utils/index")
+const { validateRegistration, validateLogin } = require("../utils/index");
 
 exports.register = async (req, res) => {
   try {
@@ -20,8 +20,8 @@ exports.register = async (req, res) => {
       return res.status(409).json({
         status: "Bad Request",
         message: "User already exists",
-        statusCode: 409
-      })
+        statusCode: 409,
+      });
     }
 
     //hashpassword and save user
@@ -31,20 +31,22 @@ exports.register = async (req, res) => {
       lastName,
       email,
       password: hashedPassword,
-      phone
+      phone,
     });
 
     //create organisation
     const org = await orgModel.create({
       name: `${firstName}'s Organisation`,
-      description: `This is ${firstName}'s organisation`
+      description: `This is ${firstName}'s organisation`,
     });
 
     //add user to organisation
     await user.addOrganisations(org);
 
     //generate jwt_token
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '3h' })
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: "3h",
+    });
 
     //on successful registration
     return res.status(201).json({
@@ -53,20 +55,20 @@ exports.register = async (req, res) => {
       data: {
         accessToken: token,
         user: {
+          userId: user.userId,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
           phone: user.phone,
-        }
-      }
+        },
+      },
     });
-
   } catch (err) {
     return res.status(400).json({
       status: "Bad Request",
       message: "Registration unsuccessful",
-      statusCode: 400
-    })
+      statusCode: 400,
+    });
   }
 };
 
@@ -87,8 +89,8 @@ exports.login = async (req, res) => {
       return res.status(404).json({
         status: "Not Found",
         message: "User not found",
-        statusCode: 404
-      })
+        statusCode: 404,
+      });
     }
 
     //compare password
@@ -98,12 +100,14 @@ exports.login = async (req, res) => {
       return res.status(400).json({
         status: "Bad Request",
         message: "Authentication failed",
-        statusCode: 400
-      })
+        statusCode: 400,
+      });
     }
 
     //generate jwt_token
-    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '3h' });
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+      expiresIn: "3h",
+    });
 
     //response
     return res.status(200).json({
@@ -112,20 +116,20 @@ exports.login = async (req, res) => {
       data: {
         accessToken: token,
         user: {
+          userId: user.userId,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
           phone: user.phone,
-        }
-      }
+        },
+      },
     });
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).json({
       status: "Bad Request",
       message: "Authentication failed",
-      statusCode: 400
-    })
+      statusCode: 400,
+    });
   }
 };

@@ -3,6 +3,8 @@ const mysql = require("mysql2");
 const pg = require("pg");
 require("dotenv").config();
 
+const dialectModule = { mysql: mysql, postgres: pg };
+
 const dbConfig = {
   database_name: process.env.DB_NAME || "hng-database",
   database_user: process.env.DB_USER || "root",
@@ -18,7 +20,7 @@ const dbConfig = {
     },
   },
   database_dialect: process.env.DB_DIALECT || "mysql",
-  database_dialect_module: process.env.NODE_ENV || mysql,
+  database_dialect_module: dialectModule[process.env.DIALECT_MODULE],
   database_dialect_options: {
     ssl: {
       require: true,
