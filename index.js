@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, async () => {
   db.sequelize
-    .sync({force: true})
+    .sync({ force: true })
     .then(() => {
       console.log(`Live at port ${PORT}`);
     })
