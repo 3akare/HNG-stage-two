@@ -55,10 +55,6 @@ db.sequelize = sequelize;
 
 db.userModel = require("./userModel")(sequelize, SequelizeObject);
 db.orgModel = require("./orgModel")(sequelize, SequelizeObject);
-db.userOrganisationModel = require("./userOrganisationModel.js")(
-  sequelize,
-  SequelizeObject
-);
 
 db.userModel.belongsToMany(db.orgModel, {
   through: "userOrganisation",

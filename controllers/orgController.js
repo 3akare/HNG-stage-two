@@ -1,4 +1,4 @@
-const { orgModel, userModel, userOrganisationModel } = require("../models");
+const { orgModel, userModel } = require("../models");
 
 exports.getOrganisations = async (req, res) => {
   try {
@@ -6,9 +6,7 @@ exports.getOrganisations = async (req, res) => {
 
     const user = await userModel.findOne({ where: { email } });
 
-    const organisations = await userOrganisationModel.findAll({
-      where: { userId: user.userId },
-    });
+    const organisations = await user.getOrganisations();
 
     return res.status(200).json({
       status: "success",
@@ -18,6 +16,7 @@ exports.getOrganisations = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       status: "Bad Request",
       message: "Could not get user's organisations",
